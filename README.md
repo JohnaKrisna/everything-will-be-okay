@@ -8,7 +8,7 @@ Tersedia dalam tiga cara untuk dijalankan: lewat Python, lewat file exe (tanpa p
 
 Buka langsung di sini, tidak perlu install apa apa:
 
-[LINK_WEB_KAMU]
+[https://johnakrisna.github.io/everything-will-be-okay/ewbo_web_cmd.html](https://johnakrisna.github.io/everything-will-be-okay/ewbo_web_cmd.html)
 
 Disarankan dibuka di laptop atau komputer. Di layar HP tampilannya akan menyarankan buka di PC, karena pengalaman gaya terminal ini paling pas di layar besar.
 
@@ -44,7 +44,7 @@ python ewbo_cmd_en.py
 ```
 ewbo_cmd.py                 versi Python (Bahasa Indonesia) untuk CMD/terminal
 ewbo_cmd_en.py               versi Python (English) untuk CMD/terminal
-ewbo_web_cmd_final.html     versi web, bisa dibuka langsung di browser
+ewbo_web_cmd.html           versi web, bisa dibuka langsung di browser
 README.md
 ```
 
