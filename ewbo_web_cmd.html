@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Everything Will Be Okay</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: #0c0c0c;
+  }
+  body {
+    font-family: 'Cascadia Mono', 'Consolas', 'Courier New', monospace;
+    color: #f2f2f2;
+    min-height: 100vh;
+    padding: 6px 8px;
+  }
+
+  /* Kalau layar sempit (HP), kasih pesan supaya buka di PC */
+  .mobile-notice {
+    display: none;
+    max-width: 420px;
+    text-align: center;
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 24px;
+    border: 1px solid #333;
+  }
+  @media (max-width: 640px) {
+    .terminal-wrap { display: none; }
+    .mobile-notice { display: block; }
+  }
+
+  .terminal-wrap {
+    width: 100%;
+  }
+
+  .terminal {
+    background: #0c0c0c;
+    font-size: 14px;
+    line-height: 1.4;
+    overflow-x: auto;
+  }
+
+  .title-ascii {
+    color: #f2f2f2;
+    font-weight: bold;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 18px;
+    line-height: 18px;
+    margin: 0 0 14px;
+    white-space: pre;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  #startLine { color: #f2f2f2; }
+
+  #statusLine { white-space: pre; }
+  #statusLine .bar { color: #f2f2f2; }
+  #statusLine .pct { color: #f2f2f2; }
+  #statusLine .spin { color: #999; }
+  #statusLine .prefix { color: #999; }
+  #statusLine .msg { color: #f2f2f2; }
+  .cursorBlock {
+    display: inline-block;
+    animation: blink 0.9s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  #afterLoading { display: none; }
+  .dialog-line1 { font-weight: bold; margin-top: 4px; }
+  .dialog-line2 { color: #999; margin-bottom: 10px; }
+
+  #wishPrompt { color: #f2f2f2; }
+  #wishInput {
+    background: transparent;
+    border: none;
+    color: #f2f2f2;
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    width: 280px;
+    max-width: 60vw;
+  }
+
+  .closingLine { margin-top: 4px; }
+  .closingLine.first { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<div class="mobile-notice">
+  Everything Will Be Okay dirancang untuk pengalaman gaya terminal —
+  paling pas dibuka di layar komputer/laptop.<br><br>
+  Buka link ini di PC ya.
+</div>
+
+<div class="terminal-wrap">
+  <div class="terminal" id="term">
+    <div class="title-ascii">███████╗██╗   ██╗███████╗██████╗ ██╗   ██╗████████╗██╗  ██╗██╗███╗   ██╗ ██████╗     ██╗    ██╗██╗██╗     ██╗     
+██╔════╝██║   ██║██╔════╝██╔══██╗╚██╗ ██╔╝╚══██╔══╝██║  ██║██║████╗  ██║██╔════╝     ██║    ██║██║██║     ██║     
+█████╗  ██║   ██║█████╗  ██████╔╝ ╚████╔╝    ██║   ███████║██║██╔██╗ ██║██║  ███╗    ██║ █╗ ██║██║██║     ██║     
+██╔══╝  ╚██╗ ██╔╝██╔══╝  ██╔══██╗  ╚██╔╝     ██║   ██╔══██║██║██║╚██╗██║██║   ██║    ██║███╗██║██║██║     ██║     
+███████╗ ╚████╔╝ ███████╗██║  ██║   ██║      ██║   ██║  ██║██║██║ ╚████║╚██████╔╝    ╚███╔███╔╝██║███████╗███████╗
+╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝   ╚═╝      ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝      ╚══╝╚══╝ ╚═╝╚══════╝╚══════╝
+
+
+██████╗ ███████╗     ██████╗ ██╗  ██╗ █████╗ ██╗   ██╗
+██╔══██╗██╔════╝    ██╔═══██╗██║ ██╔╝██╔══██╗╚██╗ ██╔╝
+██████╔╝█████╗      ██║   ██║█████╔╝ ███████║ ╚████╔╝ 
+██╔══██╗██╔══╝      ██║   ██║██╔═██╗ ██╔══██║  ╚██╔╝  
+██████╔╝███████╗    ╚██████╔╝██║  ██╗██║  ██║   ██║   
+╚═════╝ ╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+                                                      </div>
+    <div id="startLine">Tekan Enter untuk memulai proses.<span class="cursorBlock" id="startCursor">█</span></div>
+
+    <div id="loadingLine" style="display:none; margin-top:14px;">
+      <span id="statusLine"></span>
+      <div id="silenceLine" style="margin-top:2px;"></div>
+    </div>
+
+    <div id="afterLoading" style="margin-top:14px;">
+      <div class="dialog-line1">Nothing needs to be fixed right now.</div>
+      <div class="dialog-line2">You can just rest.</div>
+      <div id="okPrompt" style="color:#666; margin-top:20px;">[ Tekan Enter untuk OK ]</div>
+
+      <div id="wishArea" style="display:none; margin-top:48px;">
+        <div id="wishPrompt">Kalau boleh, tuliskan satu harapan kecilmu untuk hari ini: <input type="text" id="wishInput" maxlength="120" /></div>
+      </div>
+
+      <div id="afterWish" style="display:none; margin-top:14px;"></div>
+
+      <div id="closingArea" style="display:none; margin-top:14px;"></div>
+
+      <div id="closePrompt" style="display:none; margin-top:14px; color:#666;">[ Tekan Enter untuk menutup jendela ini... ]</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const messages = [
+    ["Menutup semua program yang membuat cemas...", 1],
+    ["Menghapus sementara pikiran yang terlalu jauh...", 1],
+    ["Menata ulang harapan yang sempat berantakan...", 2],
+    ["Menyimpan hal-hal baik yang masih ingin dipertahankan...", 1],
+    ["Melepaskan hal-hal yang memang sudah waktunya pergi...", 2],
+    ["Memproses rasa takut yang terlalu lama disimpan...", 3],
+    ["Mengingat kembali bahwa tidak semuanya harus selesai hari ini...", 3],
+    ["Memindahkan beban yang terlalu lama dipikul sendirian...", 3],
+    ["Memberi ruang untuk hati yang sedang belajar tenang...", 2],
+    ["Memulihkan sedikit kepercayaan pada hari esok...", 2],
+    ["Menyisakan ruang untuk hal-hal baik yang mungkin datang...", 1],
+    ["Hampir selesai... pelan-pelan, tidak apa-apa.", 2],
+  ];
+  const PAUSE = { 1: 1400, 2: 2500, 3: 4200 };
+  const TYPE_DELAY = 28;
+  const BAR_WIDTH = 40;
+  const SPINNER = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏"];
+  const MILESTONES = [8, 19, 34, 45, 61, 70, 79, 87, 91, 95, 98, 100];
+  const CURSOR = "\u2588";
+
+  const statusLine = document.getElementById('statusLine');
+  let frame = 0;
+  let currentPct = 0;
+  let spinTimer = null;
+
+  function renderStatus(pct, spinChar, text) {
+    const filled = Math.floor(BAR_WIDTH * pct / 100);
+    const bar = "#".repeat(filled) + "-".repeat(BAR_WIDTH - filled);
+    const pctStr = String(pct).padStart(3, " ");
+    statusLine.innerHTML =
+      `<span class="bar">[${bar}]</span> <span class="pct">${pctStr}%</span> ` +
+      `<span class="spin">${spinChar}</span>  <span class="prefix">C:\\&gt; </span>` +
+      `<span class="msg">${escapeHtml(text)}</span>`;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function nudge(target, big) {
+    if (currentPct >= target) return;
+    if (Math.random() < 0.22) return; // sesekali "macet"
+    const step = big ? (2 + Math.floor(Math.random() * 5)) : (1 + Math.floor(Math.random() * 3));
+    currentPct = Math.min(target, currentPct + step);
+  }
+
+  async function runLoading() {
+    for (let idx = 0; idx < messages.length; idx++) {
+      const [text, weight] = messages[idx];
+      const target = MILESTONES[idx];
+
+      // fase mengetik
+      for (let i = 0; i <= text.length; i++) {
+        const spin = SPINNER[frame % SPINNER.length];
+        frame++;
+        nudge(target, true);
+        const partial = text.slice(0, i) + (i < text.length ? CURSOR : "");
+        renderStatus(currentPct, spin, partial);
+        if (i < text.length) await sleep(TYPE_DELAY);
+      }
+
+      // fase jeda dengan kursor blink
+      const pauseMs = PAUSE[weight];
+      const start = Date.now();
+      let blinkOn = true;
+      let lastBlink = Date.now();
+      while (Date.now() - start < pauseMs) {
+        const spin = SPINNER[frame % SPINNER.length];
+        frame++;
+        nudge(target, false);
+        if (Date.now() - lastBlink >= 450) {
+          blinkOn = !blinkOn;
+          lastBlink = Date.now();
+        }
+        renderStatus(currentPct, spin, text + (blinkOn ? CURSOR : " "));
+        await sleep(70);
+      }
+      currentPct = target;
+    }
+    const lastMsg = messages[messages.length - 1][0];
+    renderStatus(100, SPINNER[0], lastMsg);
+    // bar di atas TIDAK disentuh lagi mulai sini - tetap permanen tampil
+
+    // baris baru terpisah di bawah bar: "C:\>" dengan kursor blink 2 detik,
+    // lalu hilang total sebelum dialog muncul (menyamai versi Python)
+    const silenceLine = document.getElementById('silenceLine');
+    const silenceMs = 2000;
+    const silenceStart = Date.now();
+    let sBlinkOn = true;
+    let sLastBlink = Date.now();
+    while (Date.now() - silenceStart < silenceMs) {
+      if (Date.now() - sLastBlink >= 450) {
+        sBlinkOn = !sBlinkOn;
+        sLastBlink = Date.now();
+      }
+      silenceLine.innerHTML = `<span class="prefix">C:\\&gt; </span><span class="msg">${sBlinkOn ? CURSOR : " "}</span>`;
+      await sleep(70);
+    }
+    silenceLine.innerHTML = "";
+
+    // jeda singkat sebelum dialog muncul (menyamai time.sleep(0.6) di dialog())
+    await sleep(600);
+
+    // progress bar tetap tampil (seperti versi CMD), tidak disembunyikan
+    document.getElementById('afterLoading').style.display = 'block';
+    document.getElementById('afterLoading').style.marginTop = '14px';
+  }
+
+  document.addEventListener('keydown', function onFirstEnter(e) {
+    if (e.key !== 'Enter') return;
+    document.removeEventListener('keydown', onFirstEnter);
+    document.getElementById('startCursor').style.display = 'none';
+    document.getElementById('loadingLine').style.display = 'block';
+    runLoading();
+  });
+
+  document.addEventListener('keydown', function onOkEnter(e) {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('afterLoading').style.display !== 'block') return;
+    if (document.getElementById('okPrompt').style.display === 'none') return;
+    document.removeEventListener('keydown', onOkEnter);
+    document.getElementById('okPrompt').style.display = 'none';
+    document.getElementById('wishArea').style.display = 'block';
+    document.getElementById('wishInput').focus();
+  });
+
+  async function finishWish(wish) {
+    if (!wish) wish = "sesuatu yang baik, apapun itu";
+    document.getElementById('wishArea').style.display = 'none';
+    const afterWish = document.getElementById('afterWish');
+    afterWish.style.display = 'block';
+    afterWish.innerHTML = "";
+
+    await sleep(1300); // jeda "membaca" harapan
+
+    // ketik "Menjaga harapanmu" huruf per huruf
+    const base = "Menjaga harapanmu";
+    const typingLine = document.createElement('div');
+    afterWish.appendChild(typingLine);
+    for (let i = 0; i <= base.length; i++) {
+      typingLine.textContent = base.slice(0, i);
+      if (i < base.length) await sleep(60);
+    }
+    // 3 titik muncul satu-satu
+    for (let i = 0; i < 3; i++) {
+      await sleep(350);
+      typingLine.textContent += ".";
+    }
+
+    await sleep(600);
+
+    const quoteLine = document.createElement('div');
+    quoteLine.style.marginTop = '10px';
+    quoteLine.innerHTML = `<b>"${escapeHtml(wish)}"</b>`;
+    afterWish.appendChild(quoteLine);
+
+    await sleep(1000);
+
+    const semogaLine = document.createElement('div');
+    semogaLine.style.color = '#999';
+    semogaLine.textContent = "...semoga menemukan jalannya.";
+    afterWish.appendChild(semogaLine);
+
+    await sleep(800);
+
+    const closing = document.getElementById('closingArea');
+    closing.style.display = 'block';
+    const lines = [
+      { text: "Selesai.", cls: "closingLine first" },
+      { text: "Mungkin semuanya belum baik-baik saja.", cls: "closingLine" },
+      { text: "Tapi kamu sudah sampai sejauh ini,", cls: "closingLine" },
+      { text: "dan untuk hari ini, itu cukup.", cls: "closingLine" },
+    ];
+    for (const line of lines) {
+      const div = document.createElement('div');
+      div.className = line.cls;
+      div.textContent = line.text;
+      closing.appendChild(div);
+      await sleep(500);
+    }
+    document.getElementById('closePrompt').style.display = 'block';
+  }
+
+  document.addEventListener('keydown', function onCloseEnter(e) {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('closePrompt').style.display !== 'block') return;
+    window.close();
+  });
+
+  document.getElementById('wishInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') finishWish(e.target.value.trim());
+  });
+})();
+</script>
+
+</body>
+</html>
