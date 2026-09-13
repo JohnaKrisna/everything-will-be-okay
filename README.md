@@ -20,7 +20,15 @@ Ada dua cara:
 
 Download `EverythingWillBeOkay.exe` (Bahasa Indonesia) atau `EverythingWillBeOkayEN.exe` (English) dari halaman [Releases](../../releases), lalu jalankan langsung. Tidak perlu install Python.
 
-Catatan: Windows Defender atau SmartScreen kadang menampilkan peringatan untuk file exe yang belum dikenal banyak orang. Ini wajar untuk aplikasi baru yang belum "dikenal" oleh sistem Microsoft, bukan berarti virus. Bisa klik "More info" lalu "Run anyway" kalau merasa aman.
+Langkah lengkapnya:
+
+1. Buka halaman [Releases](../../releases), klik release terbaru
+2. Di bagian Assets, klik file exe yang diinginkan, otomatis terdownload ke folder Downloads
+3. Buka folder Downloads, double-click file exe yang baru didownload
+4. Kalau muncul peringatan biru "Windows protected your PC", klik "More info" lalu "Run anyway". Ini wajar untuk program baru yang belum dikenal banyak orang, bukan berarti virus.
+5. Program langsung terbuka di jendela CMD. Tekan Enter untuk mulai. Tidak perlu install apapun, tidak mengubah sistem, tinggal ditutup kalau sudah selesai.
+
+Catatan: Windows Defender atau SmartScreen kadang menampilkan peringatan untuk file exe yang belum dikenal banyak orang. Ini wajar untuk aplikasi baru yang belum "dikenal" oleh sistem Microsoft, bukan berarti virus.
 
 ### 2. Pakai file Python
 
@@ -45,9 +53,12 @@ python ewbo_cmd_en.py
 ewbo_cmd.py                 versi Python (Bahasa Indonesia) untuk CMD/terminal
 ewbo_cmd_en.py               versi Python (English) untuk CMD/terminal
 ewbo_web_cmd.html           versi web, bisa dibuka langsung di browser
+images/qris.png             QRIS untuk dukungan
 README.md
 ```
 
 ## Dukung
 
-Kalau project ini terasa berarti dan ingin membantu, boleh mampir ke [LINK_ATAU_INFO_DUKUNGAN]. Tidak wajib, cukup dengan mencoba dan membagikannya juga sudah sangat berarti.
+Kalau project ini terasa berarti dan ingin membantu, bisa lewat QRIS di bawah ini. Tidak wajib, cukup dengan mencoba dan membagikannya juga sudah sangat berarti.
+
+![QRIS Everything Will Be Okay](images/qris.png)
