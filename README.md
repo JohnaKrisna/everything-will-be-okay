@@ -61,4 +61,4 @@ README.md
 
 Kalau project ini terasa berarti dan ingin membantu, bisa lewat QRIS di bawah ini. Tidak wajib, cukup dengan mencoba dan membagikannya juga sudah sangat berarti.
 
-![QRIS Everything Will Be Okay](images/qris.png)
+<img src="images/qris.png" alt="QRIS Everything Will Be Okay" width="300" />
